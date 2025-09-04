@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-g">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pemarkahan Amali MPU2082</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2, h3 { color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .rating-group label { display: inline-block; margin-right: 10px; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #amali1_section, #amali2_section { display: none; } /* Sembunyikan bahagian secara lalai */
+        .hidden { display: none; }
+        #status { margin-top: 15px; padding: 10px; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Sistem Pemarkahan Amali MPU2082</h2>
+    <p>PDPP (AMBILAN OKTOBER 2024) - TAHUN 1/ SEMESTER III</p>
+
+    <form id="assessmentForm">
+        <div class="form-group">
+            <label for="namaPenilai">Nama Penilai:</label>
+            <input type="text" id="namaPenilai" name="namaPenilai" required>
+        </div>
+
+        <div class="form-group">
+            <label for="namaPelajar">Pilih Pelajar:</label>
+            <select id="namaPelajar" name="namaPelajar" required>
+                <option value="">-- Sila Pilih Nama --</option>
+                </select>
+        </div>
+
+        <div class="form-group">
+            <label for="aktiviti">Pilih Jenis Amali:</label>
+            <select id="aktiviti" name="aktiviti" onchange="showSection()" required>
+                <option value="">-- Pilih Amali --</option>
+                <option value="Amali 1 - Perkhemahan">Amali 1 - Perkhemahan</option>
+                <option value="Amali 2 - Aktiviti Lasak">Amali 2 - Aktiviti Lasak</option>
+            </select>
+        </div>
+
+        <div id="amali1_section">
+            <h3>HP4: Kemahiran Interpersonal</h3>
+            <div class="form-group">
+                <label>1. Proaktif dalam merancang/menyusun tugasan:</label>
+                <input type="number" name="hp4_1" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>2. Memberi arahan jelas:</label>
+                <input type="number" name="hp4_2" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>3. Memastikan agihan tugas seimbang:</label>
+                <input type="number" name="hp4_3" min="1" max="5">
+            </div>
+             <div class="form-group">
+                <label>4. Bekerjasama & membantu rakan:</label>
+                <input type="number" name="hp4_4" min="1" max="5">
+            </div>
+             <div class="form-group">
+                <label>5. Menghormati pendapat orang lain:</label>
+                <input type="number" name="hp4_5" min="1" max="5">
+            </div>
+             <div class="form-group">
+                <label>6. Menjadi contoh teladan:</label>
+                <input type="number" name="hp4_6" min="1" max="5">
+            </div>
+            <textarea name="hp4_catatan" placeholder="Catatan untuk HP4..."></textarea>
+            
+            <h3>HP5: Kemahiran Komunikasi</h3>
+            <div class="form-group">
+                <label>1. Menyampaikan maklumat dengan jelas:</label>
+                <input type="number" name="hp5_1" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>2. Memberi maklum balas membina:</label>
+                <input type="number" name="hp5_2" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>3. Mendengar pandangan orang lain:</label>
+                <input type="number" name="hp5_3" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>4. Menggunakan bahasa tubuh sesuai:</label>
+                <input type="number" name="hp5_4" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>5. Ekspresi muka selari mesej lisan:</label>
+                <input type="number" name="hp5_5" min="1" max="5">
+            </div>
+            <textarea name="hp5_catatan" placeholder="Catatan untuk HP5..."></textarea>
+        </div>
+
+        <div id="amali2_section">
+            <h3>HP3: Kemahiran Praktikal</h3>
+            <div class="form-group">
+                <label>1. Menggunakan peralatan ikut prosedur:</label>
+                <input type="number" name="hp3_1" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>2. Memahami fungsi alatan:</label>
+                <input type="number" name="hp3_2" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>3. Membantu rakan guna peralatan:</label>
+                <input type="number" name="hp3_3" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>4. Tahap kebergantungan (1=Sangat bergantung, 5=Sangat berdikari):</label>
+                <input type="number" name="hp3_4" min="1" max="5">
+            </div>
+            <textarea name="hp3_catatan" placeholder="Catatan untuk HP3..."></textarea>
+
+            <h3>HP8: Kepimpinan, Autonomi & Tanggungjawab</h3>
+            <div class="form-group">
+                <label>1. Menunjukkan inisiatif tinggi:</label>
+                <input type="number" name="hp8_1" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>2. Membuat keputusan bijaksana:</label>
+                <input type="number" name="hp8_2" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>3. Melaksanakan tugas dengan integriti:</label>
+                <input type="number" name="hp8_3" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>4. Bertanggungjawab terhadap keselamatan:</label>
+                <input type="number" name="hp8_4" min="1" max="5">
+            </div>
+             <div class="form-group">
+                <label>5. Menunjukkan nilai murni konsisten:</label>
+                <input type="number" name="hp8_5" min="1" max="5">
+            </div>
+            <textarea name="hp8_catatan" placeholder="Catatan untuk HP8..."></textarea>
+        </div>
+
+        <button type="submit">Hantar Markah</button>
+        <div id="status"></div>
+    </form>
+</div>
+
+<script>
+    function showSection() {
+        var selection = document.getElementById('aktiviti').value;
+        var amali1 = document.getElementById('amali1_section');
+        var amali2 = document.getElementById('amali2_section');
+
+        amali1.style.display = 'none';
+        amali2.style.display = 'none';
+
+        if (selection === 'Amali 1 - Perkhemahan') {
+            amali1.style.display = 'block';
+        } else if (selection === 'Amali 2 - Aktiviti Lasak') {
+            amali2.style.display = 'block';
+        }
+    }
+
+    const form = document.getElementById('assessmentForm');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const statusDiv = document.getElementById('status');
+        statusDiv.className = '';
+        statusDiv.textContent = 'Menghantar...';
+
+        const formData = new FormData(form);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        const scriptURL = 'PASTE_URL_APPS_SCRIPT_ANDA_DI_SINI'; // <-- PENTING! GANTIKAN URL
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.result === 'success'){
+                statusDiv.textContent = 'Markah berjaya direkodkan!';
+                statusDiv.className = 'success';
+                form.reset();
+                showSection(); // Reset sections to hidden
+            } else {
+                throw new Error(data.message || 'Unknown error');
+            }
+        })
+        .catch(error => {
+            statusDiv.textContent = 'Gagal merekod markah: ' + error.message;
+            statusDiv.className = 'error';
+        });
+    });
+</script>
+
+</body>
+</html>
