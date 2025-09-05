@@ -3,220 +3,350 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Pemarkahan Amali MPU2082</title>
+    <title>Borang Penilaian Kumpulan - Program Bina Insan Guru</title>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/xlsx.full.min.js"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2, h3 { color: #333; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
-        .filter-group { display: flex; gap: 10px; }
-        .filter-group .form-group { flex: 1; }
-        button { background-color: #007bff; color: white; padding: 12px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; width: 100%; }
-        button:hover { background-color: #0056b3; }
-        #amali1_section, #amali2_section { display: none; border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px; }
-        #status { margin-top: 15px; padding: 10px; border-radius: 4px; text-align: center; }
-        .success { background-color: #d4edda; color: #155724; }
-        .error { background-color: #f8d7da; color: #721c24; }
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        h1, h2 { text-align: center; color: #333; }
+        .section { margin-bottom: 30px; padding: 15px; background-color: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        .rubric { font-size: 0.9em; margin-top: 10px; }
+        .rubric span { padding: 5px; border-radius: 4px; margin-right: 5px; }
+        .lemak { background-color: red; color: white; }
+        .sederhana { background-color: orange; color: white; }
+        .kepuasan { background-color: yellow; color: black; }
+        .cemerlang { background-color: lightgreen; color: black; }
+        .amat { background-color: green; color: white; }
+        #memberList { display: none; }
+        button { background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        input[type="file"], input[type="text"], input[type="number"] { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h2>Sistem Pemarkahan Amali MPU2082</h2>
-    <p>PDPP (AMBILAN OKTOBER 2024) - TAHUN 1/ SEMESTER III</p>
-
-    <form id="assessmentForm">
-        <input type="hidden" id="angkaGiliran" name="angkaGiliran">
-        <input type="hidden" id="noKadPengenalan" name="noKadPengenalan">
-
-        <div class="form-group">
-            <label for="namaPenilai">Nama Penilai:</label>
-            <input type="text" id="namaPenilai" name="namaPenilai" required>
-        </div>
-
-        <div class="filter-group">
-            <div class="form-group">
-                <label for="siriFilter">Saring Kelas:</label>
-                <select id="siriFilter" onchange="populateStudents()">
-                    <option value="all">-- Tunjuk Semua --</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="namaPelajar">Pilih Pelajar:</label>
-                <select id="namaPelajar" name="namaPelajar" required onchange="updateStudentDetails()">
-                    <option value="">-- Pilih Kelas Dahulu --</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="aktiviti">Pilih Jenis Amali:</label>
-            <select id="aktiviti" name="aktiviti" onchange="showSection()" required>
-                <option value="">-- Pilih Amali --</option>
-                <option value="Amali 1 - Perkhemahan">Amali 1 - Perkhemahan</option>
-                <option value="Amali 2 - Aktiviti Lasak">Amali 2 - Aktiviti Lasak</option>
-            </select>
-        </div>
-
-        <div id="amali1_section">
-            <h3>HP4: Kemahiran Interpersonal</h3>
-            <div class="form-group"><label>1. Proaktif dalam merancang/menyusun tugasan:</label> <input type="number" name="hp4_1" min="1" max="5"></div>
-            <div class="form-group"><label>2. Memberi arahan jelas:</label> <input type="number" name="hp4_2" min="1" max="5"></div>
-            <div class="form-group"><label>3. Memastikan agihan tugas seimbang:</label> <input type="number" name="hp4_3" min="1" max="5"></div>
-            <div class="form-group"><label>4. Bekerjasama & membantu rakan:</label> <input type="number" name="hp4_4" min="1" max="5"></div>
-            <div class="form-group"><label>5. Menghormati pendapat orang lain:</label> <input type="number" name="hp4_5" min="1" max="5"></div>
-            <div class="form-group"><label>6. Menjadi contoh teladan:</label> <input type="number" name="hp4_6" min="1" max="5"></div>
-            <textarea name="hp4_catatan" placeholder="Catatan untuk HP4..."></textarea>
-            
-            <h3>HP5: Kemahiran Komunikasi</h3>
-            <div class="form-group"><label>1. Menyampaikan maklumat dengan jelas:</label> <input type="number" name="hp5_1" min="1" max="5"></div>
-            <div class="form-group"><label>2. Memberi maklum balas membina:</label> <input type="number" name="hp5_2" min="1" max="5"></div>
-            <div class="form-group"><label>3. Mendengar pandangan orang lain:</label> <input type="number" name="hp5_3" min="1" max="5"></div>
-            <div class="form-group"><label>4. Menggunakan bahasa tubuh sesuai:</label> <input type="number" name="hp5_4" min="1" max="5"></div>
-            <div class="form-group"><label>5. Ekspresi muka selari mesej lisan:</label> <input type="number" name="hp5_5" min="1" max="5"></div>
-            <textarea name="hp5_catatan" placeholder="Catatan untuk HP5..."></textarea>
-        </div>
-
-        <div id="amali2_section">
-            <h3>HP3: Kemahiran Praktikal</h3>
-            <div class="form-group"><label>1. Menggunakan peralatan ikut prosedur:</label> <input type="number" name="hp3_1" min="1" max="5"></div>
-            <div class="form-group"><label>2. Memahami fungsi alatan:</label> <input type="number" name="hp3_2" min="1" max="5"></div>
-            <div class="form-group"><label>3. Membantu rakan guna peralatan:</label> <input type="number" name="hp3_3" min="1" max="5"></div>
-            <div class="form-group"><label>4. Tahap kebergantungan (1=Sangat bergantung, 5=Sangat berdikari):</label> <input type="number" name="hp3_4" min="1" max="5"></div>
-            <textarea name="hp3_catatan" placeholder="Catatan untuk HP3..."></textarea>
-
-            <h3>HP8: Kepimpinan, Autonomi & Tanggungjawab</h3>
-            <div class="form-group"><label>1. Menunjukkan inisiatif tinggi:</label> <input type="number" name="hp8_1" min="1" max="5"></div>
-            <div class="form-group"><label>2. Membuat keputusan bijaksana:</label> <input type="number" name="hp8_2" min="1" max="5"></div>
-            <div class="form-group"><label>3. Melaksanakan tugas dengan integriti:</label> <input type="number" name="hp8_3" min="1" max="5"></div>
-            <div class="form-group"><label>4. Bertanggungjawab terhadap keselamatan:</label> <input type="number" name="hp8_4" min="1" max="5"></div>
-            <div class="form-group"><label>5. Menunjukkan nilai murni konsisten:</label> <input type="number" name="hp8_5" min="1" max="5"></div>
-            <textarea name="hp8_catatan" placeholder="Catatan untuk HP8..."></textarea>
-        </div>
-
-        <button type="submit">Hantar Markah</button>
-        <div id="status"></div>
-    </form>
-</div>
-
-<script>
-    // STUDENT LIST (as provided)
-    const students = [
-        { id: 104, name: "'IZZATUL HANAN BINTI MOHAMAD", ic: "000913-02-0090", a_giliran: "2024182400001", siri_big: "BAMB(R)" },
-        { id: 105, name: "AMIR SIRHAN BIN AHMAD", ic: "970325-02-5757", a_giliran: "2024182400002", siri_big: "BAMB(R)" },
-        // ... (the rest of the student list remains the same) ...
-        { id: 103, name: "ZAID BIN SHUIB", ic: "960914-02-6513", a_giliran: "2024182390103", siri_big: "PIMK(R)PJJ" }
-    ];
-
-    // =========================================================================
-    // == FUNGSI-FUNGSI SISTEM (JANGAN UBAH BAWAH NI) ==
-    // =========================================================================
-
-    const siriFilter = document.getElementById('siriFilter');
-    const studentSelect = document.getElementById('namaPelajar');
-
-    function showSection() {
-        var selection = document.getElementById('aktiviti').value;
-        document.getElementById('amali1_section').style.display = (selection === 'Amali 1 - Perkhemahan') ? 'block' : 'none';
-        document.getElementById('amali2_section').style.display = (selection === 'Amali 2 - Aktiviti Lasak') ? 'block' : 'none';
-    }
+    <h1>Borang Penilaian Kumpulan Berdasarkan HP untuk Program Bina Insan Guru</h1>
     
-    function populateFilters() {
-        const uniqueSiri = [...new Set(students.map(s => s.siri_big).filter(s => s))];
-        uniqueSiri.sort();
-        uniqueSiri.forEach(siri => {
-            const option = document.createElement('option');
-            option.value = siri;
-            option.textContent = siri;
-            siriFilter.appendChild(option);
-        });
-    }
-
-    function populateStudents() {
-        const selectedSiri = siriFilter.value;
-        studentSelect.innerHTML = '<option value="">-- Sila Pilih Nama --</option>'; 
-
-        const filteredStudents = (selectedSiri === 'all') 
-            ? students 
-            : students.filter(s => s.siri_big === selectedSiri);
+    <div class="section">
+        <h2>Muat Naik Senarai Pelajar (Excel)</h2>
+        <input type="file" id="uploadExcel" accept=".xlsx, .xls">
+        <button onclick="processExcel()">Proses Fail Excel</button>
+        <p>Format Excel mestilah mempunyai header: Nama Pelajar, No. KP, AGiliran, Kelas, Kumpulan</p>
+    </div>
+    
+    <div class="section">
+        <label for="groupNo">No Kumpulan:</label>
+        <input type="text" id="groupNo" required>
+        <button onclick="loadMembers()">Muat Senarai Ahli</button>
+    </div>
+    
+    <div id="memberList">
+        <h2>Senarai Ahli Kumpulan</h2>
+        <ul id="members"></ul>
         
-        filteredStudents.sort((a, b) => a.name.localeCompare(b.name));
+        <form id="assessmentForm">
+            <!-- Kriteria 1: HP3 Kemahiran Komunikasi -->
+            <div class="section">
+                <h2>HP3 Kemahiran Komunikasi (30%)</h2>
+                <div class="rubric">
+                    <span class="lemak">1: Lemah - Tidak berkomunikasi dengan baik</span>
+                    <span class="sederhana">2: Sederhana - Komunikasi terhad</span>
+                    <span class="kepuasan">3: Kepuasan - Komunikasi aktif</span>
+                    <span class="cemerlang">4: Cemerlang - Komunikasi efektif</span>
+                    <span class="amat">5: Amat Cemerlang - Komunikasi luar biasa</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Ahli</th>
+                            <th>Markah (1-5)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-komunikasi"></tbody>
+                </table>
+            </div>
+            
+            <!-- Kriteria 2: HP4 Kemahiran Interpersonal -->
+            <div class="section">
+                <h2>HP4 Kemahiran Interpersonal (30%)</h2>
+                <div class="rubric">
+                    <span class="lemak">1: Lemah - Tidak membina hubungan</span>
+                    <span class="sederhana">2: Sederhana - Hubungan tidak konsisten</span>
+                    <span class="kepuasan">3: Kepuasan - Bekerjasama dengan baik</span>
+                    <span class="cemerlang">4: Cemerlang - Hubungan kukuh</span>
+                    <span class="amat">5: Amat Cemerlang - Hubungan sangat kukuh</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Ahli</th>
+                            <th>Markah (1-5)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-interpersonal"></tbody>
+                </table>
+            </div>
+            
+            <!-- Kriteria 3: HP8 Kemahiran Praktikal -->
+            <div class="section">
+                <h2>HP8 Kemahiran Praktikal (15%)</h2>
+                <div class="rubric">
+                    <span class="lemak">1: Lemah - Tidak melaksanakan tugas</span>
+                    <span class="sederhana">2: Sederhana - Melaksanakan tugas asas</span>
+                    <span class="kepuasan">3: Kepuasan - Melaksanakan dengan baik</span>
+                    <span class="cemerlang">4: Cemerlang - Melaksanakan dengan cekap</span>
+                    <span class="amat">5: Amat Cemerlang - Melaksanakan dengan inovatif</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Ahli</th>
+                            <th>Markah (1-5)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-praktikal"></tbody>
+                </table>
+            </div>
+            
+            <!-- Kriteria 4: HP9 Autonomi dan Tanggungjawab -->
+            <div class="section">
+                <h2>HP9 Autonomi dan Tanggungjawab (15%)</h2>
+                <div class="rubric">
+                    <span class="lemak">1: Lemah - Bergantung kepada orang lain</span>
+                    <span class="sederhana">2: Sederhana - Sedikit autonomi</span>
+                    <span class="kepuasan">3: Kepuasan - Bertanggungjawab</span>
+                    <span class="cemerlang">4: Cemerlang - Autonomi tinggi</span>
+                    <span class="amat">5: Amat Cemerlang - Kepimpinan autonomi</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Ahli</th>
+                            <th>Markah (1-5)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-autonomi"></tbody>
+                </table>
+            </div>
+            
+            <!-- Kriteria 5: HP10 Kepimpinan -->
+            <div class="section">
+                <h2>HP10 Kepimpinan (10%)</h2>
+                <div class="rubric">
+                    <span class="lemak">1: Lemah - Tidak menunjukkan kepimpinan</span>
+                    <span class="sederhana">2: Sederhana - Kepimpinan minimum</span>
+                    <span class="kepuasan">3: Kepuasan - Memimpin dengan baik</span>
+                    <span class="cemerlang">4: Cemerlang - Memimpin efektif</span>
+                    <span class="amat">5: Amat Cemerlang - Memimpin inspirasi</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Ahli</th>
+                            <th>Markah (1-5)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-kepimpinan"></tbody>
+                </table>
+            </div>
 
-        filteredStudents.forEach(student => {
-            const option = document.createElement('option');
-            option.value = student.name;
-            option.textContent = student.name;
-            studentSelect.appendChild(option);
-        });
-        updateStudentDetails();
-    }
+            <div id="totalSection" class="section" style="display: none;">
+                <h2>Jumlah Markah</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Ahli</th>
+                            <th>Jumlah (%)</th>
+                            <th>Tahap</th>
+                        </tr>
+                    </thead>
+                    <tbody id="totalTable"></tbody>
+                </table>
+            </div>
+            
+            <button type="button" onclick="calculateTotals()">Kira Jumlah Markah</button>
+            <button type="submit">Hantar Penilaian</button>
+        </form>
+    </div>
 
-    function updateStudentDetails() {
-        const selectedName = studentSelect.value;
-        const studentData = students.find(s => s.name === selectedName);
-        if (studentData) {
-            document.getElementById('angkaGiliran').value = studentData.a_giliran;
-            document.getElementById('noKadPengenalan').value = studentData.ic;
-        } else {
-            document.getElementById('angkaGiliran').value = '';
-            document.getElementById('noKadPengenalan').value = '';
+    <script>
+        let groups = {}; // Objek untuk menyimpan kumpulan dinamik
+        const colors = ['red', 'orange', 'yellow', 'lightgreen', 'green'];
+
+        function processExcel() {
+            const fileInput = document.getElementById('uploadExcel');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Sila pilih fail Excel terlebih dahulu.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = e.target.result;
+                const workbook = XLSX.read(data, { type: 'binary' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                // Asumsi baris pertama adalah header
+                const headers = json[0];
+                const namaIdx = headers.indexOf('Nama Pelajar');
+                const kumpulanIdx = headers.indexOf('Kumpulan');
+
+                if (namaIdx === -1 || kumpulanIdx === -1) {
+                    alert('Fail Excel tidak mempunyai header yang betul. Pastikan ada "Nama Pelajar" dan "Kumpulan".');
+                    return;
+                }
+
+                groups = {};
+                for (let i = 1; i < json.length; i++) {
+                    const row = json[i];
+                    const nama = row[namaIdx];
+                    const kumpulan = row[kumpulanIdx];
+                    if (kumpulan && nama) {
+                        if (!groups[kumpulan]) {
+                            groups[kumpulan] = [];
+                        }
+                        groups[kumpulan].push(nama);
+                    }
+                }
+                alert('Senarai pelajar telah dimuat naik dan diproses.');
+            };
+            reader.readAsBinaryString(file);
         }
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        populateFilters();
-        populateStudents();
-    });
-
-    const form = document.getElementById('assessmentForm');
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const statusDiv = document.getElementById('status');
-        statusDiv.className = '';
-        statusDiv.textContent = 'Menghantar...';
-
-        const formData = new FormData(form);
-        const data = {};
-        formData.forEach((value, key) => { data[key] = value; });
-
-        // --- IMPORTANT! THIS URL HAS BEEN UPDATED WITH YOUR NEW DEPLOYMENT ---
-        const scriptURL = 'https://script.google.com/macros/s/AKfycby2-PKHtKk3jVfi3JbfvRKFbbAFr1PBvZeYxNWpRTIzumx2Vl39fzUYzHtW0u7sT2WE/exec';
-
-        fetch(scriptURL, {
-            method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            redirect: 'follow',
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+        function loadMembers() {
+            const groupNo = document.getElementById('groupNo').value.trim();
+            if (Object.keys(groups).length === 0) {
+                alert('Sila muat naik dan proses fail Excel terlebih dahulu.');
+                return;
             }
-            return response.json();
-        })
-        .then(data => {
-            if(data.result === 'success'){
-                statusDiv.textContent = 'Markah berjaya direkodkan!';
-                statusDiv.className = 'success';
-                form.reset();
-                showSection(); 
-                populateStudents();
-            } else {
-                throw new Error(data.message || 'An unknown error occurred in the script.');
+            const members = groups[groupNo];
+            if (!members) {
+                alert('No kumpulan tidak wujud dalam data.');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Fetch Error:', error);
-            statusDiv.textContent = 'Gagal merekod markah: ' + error.message;
-            statusDiv.className = 'error';
+
+            const memberList = document.getElementById('members');
+            memberList.innerHTML = '';
+            members.forEach(member => {
+                const li = document.createElement('li');
+                li.textContent = member;
+                memberList.appendChild(li);
+            });
+
+            // Populate tables
+            const tables = ['table-komunikasi', 'table-interpersonal', 'table-praktikal', 'table-autonomi', 'table-kepimpinan'];
+            tables.forEach(tableId => {
+                const tbody = document.getElementById(tableId);
+                tbody.innerHTML = '';
+                members.forEach(member => {
+                    const tr = document.createElement('tr');
+                    const tdName = document.createElement('td');
+                    tdName.textContent = member;
+                    const tdScore = document.createElement('td');
+                    const select = document.createElement('select');
+                    select.innerHTML = '<option value="">Pilih</option>';
+                    for (let i = 1; i <= 5; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = i;
+                        select.appendChild(option);
+                    }
+                    select.onchange = function() {
+                        const val = parseInt(this.value);
+                        if (!isNaN(val)) {
+                            tdScore.style.backgroundColor = colors[val - 1];
+                        } else {
+                            tdScore.style.backgroundColor = '';
+                        }
+                    };
+                    tdScore.appendChild(select);
+                    tr.appendChild(tdName);
+                    tr.appendChild(tdScore);
+                    tbody.appendChild(tr);
+                });
+            });
+
+            document.getElementById('memberList').style.display = 'block';
+        }
+
+        function calculateTotals() {
+            const tables = ['table-komunikasi', 'table-interpersonal', 'table-praktikal', 'table-autonomi', 'table-kepimpinan'];
+            const weights = [30, 30, 15, 15, 10];
+            const members = groups[document.getElementById('groupNo').value.trim()];
+            const totalTable = document.getElementById('totalTable');
+            totalTable.innerHTML = '';
+
+            let allFilled = true;
+
+            members.forEach((member, index) => {
+                let scores = [];
+                tables.forEach(tableId => {
+                    const select = document.querySelector(`#${tableId} tr:nth-child(${index + 1}) select`);
+                    const val = parseInt(select.value);
+                    if (isNaN(val)) {
+                        allFilled = false;
+                        return;
+                    }
+                    scores.push(val);
+                });
+
+                if (!allFilled) return;
+
+                let total = 0;
+                scores.forEach((score, i) => {
+                    total += score * weights[i];
+                });
+                total /= 5;
+
+                let level = '';
+                let color = '';
+                if (total < 50) {
+                    level = 'Lemah';
+                    color = 'red';
+                } else if (total < 60) {
+                    level = 'Sederhana';
+                    color = 'orange';
+                } else if (total < 75) {
+                    level = 'Kepuasan';
+                    color = 'yellow';
+                } else if (total < 90) {
+                    level = 'Cemerlang';
+                    color = 'lightgreen';
+                } else {
+                    level = 'Amat Cemerlang';
+                    color = 'green';
+                }
+
+                const tr = document.createElement('tr');
+                const tdName = document.createElement('td');
+                tdName.textContent = member;
+                const tdTotal = document.createElement('td');
+                tdTotal.textContent = total.toFixed(2);
+                const tdLevel = document.createElement('td');
+                tdLevel.textContent = level;
+                tdLevel.style.backgroundColor = color;
+                tr.appendChild(tdName);
+                tr.appendChild(tdTotal);
+                tr.appendChild(tdLevel);
+                totalTable.appendChild(tr);
+            });
+
+            if (!allFilled) {
+                alert('Sila isi semua markah terlebih dahulu.');
+                return;
+            }
+
+            document.getElementById('totalSection').style.display = 'block';
+        }
+
+        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Penilaian telah dihantar! (Ini adalah simulasi sahaja)');
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
