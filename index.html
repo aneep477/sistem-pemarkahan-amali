@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borang Penilaian Kumpulan - Program Bina Insan Guru</title>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
         h1, h2 { text-align: center; color: #333; }
@@ -175,6 +175,10 @@
         const colors = ['red', 'orange', 'yellow', 'lightgreen', 'green'];
 
         function processExcel() {
+            if (typeof XLSX === 'undefined') {
+                alert('Perpustakaan SheetJS tidak dimuat. Sila semak sambungan internet atau tag skrip dalam HTML.');
+                return;
+            }
             const fileInput = document.getElementById('uploadExcel');
             const file = fileInput.files[0];
             if (!file) {
